@@ -25,6 +25,7 @@ namespace System.Collections.Immutable.Tests
             AssertExtensions.Throws<ArgumentOutOfRangeException>(indexParameterName, () => indexOfItemIndexCountEQ(emptyCollection, 100, -1, 1, EqualityComparer<int>.Default));
             AssertExtensions.Throws<ArgumentOutOfRangeException>("count", () => indexOfItemIndexCountEQ(singleCollection, 100, 1, 1, EqualityComparer<int>.Default));
             AssertExtensions.Throws<ArgumentOutOfRangeException>(indexParameterName, () => indexOfItemIndexCountEQ(singleCollection, 100, -1, 1, EqualityComparer<int>.Default));
+            AssertExtensions.Throws<ArgumentOutOfRangeException>(indexParameterName, () => indexOfItemIndexCountEQ(singleCollection, 100, 2, 0, EqualityComparer<int>.Default));
             AssertExtensions.Throws<ArgumentOutOfRangeException>("count", () => indexOfItemIndexCountEQ(collection1256, 100, 1, 20, EqualityComparer<int>.Default));
             AssertExtensions.Throws<ArgumentOutOfRangeException>("count", () => indexOfItemIndexCountEQ(collection1256, 100, 1, -1, EqualityComparer<int>.Default));
             AssertExtensions.Throws<ArgumentOutOfRangeException>(indexParameterName, () => indexOfItemIndexCountEQ(emptyCollection, 100, 1, 1, new CustomComparer(50)));
