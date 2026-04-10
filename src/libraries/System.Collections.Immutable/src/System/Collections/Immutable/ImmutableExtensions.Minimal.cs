@@ -128,8 +128,9 @@ namespace System.Collections.Immutable
                 }
 
 #if !NET
-                // On .NET Framework, if 'sequence' is actually a covariant array (for example, string[] used as ICollection<object>),
-                // its ICollection<T>.CopyTo implementation may call Array.Copy and throw an ArrayTypeMismatchException when copying into a T[].
+                // On .NET Framework, if 'sequence' is actually a covariant array (for example, a string[] assigned to object[] and passed as ICollection<object>),
+                // sequence.GetType() won't match typeof(T[]), so the fast path above is skipped.
+                // The array's ICollection<T>.CopyTo implementation may call Array.Copy and throw an ArrayTypeMismatchException when copying into a T[].
                 if (sequence is Array)
                 {
                     return false;
