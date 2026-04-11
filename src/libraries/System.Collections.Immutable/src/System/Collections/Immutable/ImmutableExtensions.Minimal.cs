@@ -103,9 +103,9 @@ namespace System.Collections.Immutable
             Debug.Assert(arrayIndex >= 0 && arrayIndex <= array.Length);
 
             // Optimized paths for well-known types, all other ICollection<T> implementations use the generic CopyTo fallback.
-            if (sequence is ICollection<T>)
+            if (sequence is ICollection<T> collection)
             {
-                if (sequence is List<T> list)
+                if (collection is List<T> list)
                 {
                     list.CopyTo(array, arrayIndex);
                     return true;
@@ -114,14 +114,14 @@ namespace System.Collections.Immutable
                 // Array.Copy can throw an ArrayTypeMismatchException if the underlying type of
                 // the destination array is not typeof(T[]), but is assignment-compatible with T[].
                 // See https://github.com/dotnet/runtime/issues/14794 for more info.
-                if (sequence.GetType() == typeof(T[]))
+                if (collection.GetType() == typeof(T[]))
                 {
-                    var sourceArray = (T[])sequence;
+                    var sourceArray = (T[])collection;
                     Array.Copy(sourceArray, 0, array, arrayIndex, sourceArray.Length);
                     return true;
                 }
 
-                if (sequence is ImmutableArray<T> immutable)
+                if (collection is ImmutableArray<T> immutable)
                 {
                     Array.Copy(immutable.array!, 0, array, arrayIndex, immutable.Length);
                     return true;
@@ -131,13 +131,13 @@ namespace System.Collections.Immutable
                 // On .NET Framework, if 'sequence' is actually a covariant array (for example, a string[] assigned to object[] and passed as ICollection<object>),
                 // sequence.GetType() won't match typeof(T[]), so the fast path above is skipped.
                 // The array's ICollection<T>.CopyTo implementation may call Array.Copy and throw an ArrayTypeMismatchException when copying into a T[].
-                if (sequence is Array)
+                if (collection is Array)
                 {
                     return false;
                 }
 #endif
 
-                ((ICollection<T>)sequence).CopyTo(array, arrayIndex);
+                collection.CopyTo(array, arrayIndex);
                 return true;
             }
 
